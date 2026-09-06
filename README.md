@@ -121,7 +121,7 @@ Set environment variables (or edit `config.py` directly):
 DB_USER=user
 DB_PASSWORD=password
 DB_HOST=localhost
-DB_PORT=3306
+DB_PORT=3307
 DB_NAME=securewatch_db
 SECRET_KEY=your-secret-key
 NVD_API_KEY=your-nvd-api-key
