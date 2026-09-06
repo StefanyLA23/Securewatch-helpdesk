@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Dashboard</h2>
+    <a href="{{ url_for('nuevo_ticket') }}" class="btn btn-success">+ Nuevo Ticket</a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center p-3"><h5>Total</h5><h2>{{ total }}</h2></div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center p-3"><h5>Abiertos</h5><h2>{{ abiertos }}</h2></div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center p-3 border-danger"><h5>SLA Vencido</h5><h2 class="text-danger">{{ vencidos }}</h2></div>
+    </div>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th><th>Título</th><th>Categoría</th><th>Prioridad</th><th>Estado</th><th>SLA</th><th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in tickets %}
+        <tr class="{{ 'table-danger' if t.sla_vencido() else '' }}">
+            <td>{{ t.id }}</td>
+            <td>{{ t.titulo }}</td>
+            <td>{{ t.categoria.nombre }}</td>
+            <td>{{ t.prioridad }}</td>
+            <td>{{ t.estado }}</td>
+            <td>{{ t.fecha_limite_sla.strftime('%Y-%m-%d %H:%M') if t.fecha_limite_sla else '-' }}</td>
+            <td><a href="{{ url_for('detalle_ticket', ticket_id=t.id) }}" class="btn btn-sm btn-outline-primary">Ver</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

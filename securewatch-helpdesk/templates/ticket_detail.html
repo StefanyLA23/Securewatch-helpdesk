@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Ticket #{{ ticket.id }} - {{ ticket.titulo }}</h2>
+<p>{{ ticket.descripcion }}</p>
+<p>
+    <strong>Categoría:</strong> {{ ticket.categoria.nombre }} |
+    <strong>Prioridad:</strong> {{ ticket.prioridad }} |
+    <strong>Estado:</strong> {{ ticket.estado }} |
+    <strong>SLA:</strong> {{ ticket.fecha_limite_sla.strftime('%Y-%m-%d %H:%M') if ticket.fecha_limite_sla else '-' }}
+    {% if ticket.sla_vencido() %}<span class="badge bg-danger">Vencido</span>{% endif %}
+</p>
+<p><strong>Creado por:</strong> {{ ticket.creador.nombre }} |
+   <strong>Técnico:</strong> {{ ticket.tecnico.nombre if ticket.tecnico else 'Sin asignar' }}</p>
+
+<div class="mb-4">
+    <form method="POST" class="d-inline">
+        {% if current_user.rol in ['tecnico', 'admin'] and not ticket.tecnico_id %}
+        <button name="accion" value="tomar" class="btn btn-primary btn-sm">Tomar ticket</button>
+        {% endif %}
+        {% if current_user.rol in ['tecnico', 'admin'] and ticket.estado in ['abierto', 'en_proceso'] %}
+        <button name="accion" value="escalar" class="btn btn-warning btn-sm">Escalar</button>
+        <button name="accion" value="resolver" class="btn btn-success btn-sm">Resolver</button>
+        {% endif %}
+        {% if current_user.rol in ['usuario', 'admin'] and ticket.estado == 'resuelto' %}
+        <button name="accion" value="cerrar" class="btn btn-secondary btn-sm">Cerrar</button>
+        {% endif %}
+    </form>
+</div>
+
+<h4>Comentarios</h4>
+<ul class="list-group mb-3">
+    {% for c in ticket.comentarios %}
+    <li class="list-group-item">
+        <strong>{{ c.usuario.nombre }}</strong> - {{ c.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}<br>
+        {{ c.contenido }}
+    </li>
+    {% endfor %}
+</ul>
+
+<form method="POST" class="mb-4">
+    <input type="hidden" name="accion" value="comentar">
+    <textarea name="contenido" class="form-control mb-2" placeholder="Escribe un comentario" required></textarea>
+    <button type="submit" class="btn btn-outline-primary btn-sm">Comentar</button>
+</form>
+
+<h4>Historial de auditoría</h4>
+<ul class="list-group">
+    {% for h in historial %}
+    <li class="list-group-item">{{ h.fecha.strftime('%Y-%m-%d %H:%M') }} - {{ h.accion }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

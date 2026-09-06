@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Inventario de Activos</h2>
+    <div>
+        <a href="{{ url_for('nuevo_activo') }}" class="btn btn-success">+ Nuevo Activo</a>
+        {% if current_user.rol in ['tecnico', 'admin'] %}
+        <form method="POST" action="{{ url_for('escanear_ahora') }}" class="d-inline">
+            <button type="submit" class="btn btn-outline-danger">Escanear vulnerabilidades ahora</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th><th>Nombre</th><th>Tipo</th><th>Producto</th><th>Versión</th><th>Responsable</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a in activos %}
+        <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.nombre }}</td>
+            <td>{{ a.tipo }}</td>
+            <td>{{ a.producto }}</td>
+            <td>{{ a.version }}</td>
+            <td>{{ a.responsable.nombre }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

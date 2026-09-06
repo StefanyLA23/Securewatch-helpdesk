@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Registrar Activo</h2>
+<form method="POST" style="max-width:500px">
+    <div class="mb-3">
+        <label class="form-label">Nombre del activo</label>
+        <input type="text" name="nombre" class="form-control" placeholder="Servidor Web 01" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Tipo</label>
+        <select name="tipo" class="form-select" required>
+            <option value="servidor">Servidor</option>
+            <option value="equipo">Equipo</option>
+            <option value="software">Software</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Producto</label>
+        <input type="text" name="producto" class="form-control" placeholder="Apache HTTP Server" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Versión</label>
+        <input type="text" name="version" class="form-control" placeholder="2.4.49" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+{% endblock %}
